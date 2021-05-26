@@ -1,0 +1,27 @@
+td {
+    border: 1px solid black;
+}
+
+.input_td {
+    padding: 0px;
+}
+
+table {
+    border-collapse: collapse;
+    text-align: center;
+}
+
+button {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    display: flex;
+    flex-flow: column;
+}
+
+input {
+    width: 60px;
+    margin: 5px;
+}
