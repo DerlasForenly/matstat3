@@ -25,3 +25,8 @@ input {
     width: 60px;
     margin: 5px;
 }
+
+#Fs {
+    display: flex;
+    flex-flow: column;
+}

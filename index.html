@@ -8,98 +8,12 @@
 <body>
 
     <input type="number" placeholder="A" value="3" id="size_A">
-    <input type="number" placeholder="B" value="2" id="size_B">
+    <input type="number" placeholder="B" value="4" id="size_B">
     
-    <table cellspacing="0" cellpadding="5" id="main_table">
-        <tr>
-            <td rowspan="3">Рівень фактора B</td>
-            <td colspan="6">Рівень фактора A</td>
-            <td rowspan="3">Середня величина за рядками</td>
-            <td rowspan="3">Загальна середня величина</td>
-        </tr>
-        <tr>
-            <td colspan="2">A<sub>1</sub></td>
-            <td colspan="2">A<sub>2</sub></td>
-            <td colspan="2">A<sub>3</sub></td>
-        </tr>
-        <tr>
-            <td>-</td>
-            <td>Блочна середня</td>
-            <td>-</td>
-            <td>Блочна середня</td>
-            <td>-</td>
-            <td>Блочна середня</td>
-        </tr>
-        <tr>
-            <td>B<sub>1</sub></td>
-            <td class="input_td"><textarea id="A1B1"></textarea></td>
-            <td class="block_mean">?</td>
-            <td class="input_td"><textarea id="A2B1"></textarea></td>
-            <td class="block_mean">?</td>
-            <td class="input_td"><textarea id="A3B1"></textarea></td>
-            <td class="block_mean">?</td>
-            <td class="row_mean">?</td>
-            <td rowspan="3" id="general_mean">?</td>
-        </tr>
-        <tr>
-            <td>B<sub>2</sub></td>
-            <td class="input_td"><textarea id="A1B2"></textarea></td>
-            <td class="block_mean">?</td>
-            <td class="input_td"><textarea id="A2B2"></textarea></td>
-            <td class="block_mean">?</td>
-            <td class="input_td"><textarea id="A3B2"></textarea></td>
-            <td class="block_mean">?</td>
-            <td class="row_mean">?</td>
-        </tr>
-        <tr>
-            <td>Середня величина за стовпцями</td>
-            <td colspan="2" class="col_mean">?</td>
-            <td colspan="2" class="col_mean">?</td>
-            <td colspan="2" class="col_mean">?</td>
-            <td></td>
-        </tr>
+    <table cellspacing="0" cellpadding="5" id="main_table"></table>
+    <div id="Fs"></div>
 
-        <tr>
-            <td colspan="3">Джерело, що спонукає до розсіювання</td>
-            <td colspan="2">Сума квадратів відхилень</td>
-            <td colspan="2">Число ступенів свободи</td>
-            <td colspan="2">Статистичні оцінки дисперсій (виправлені дисперсії)</td>
-        </tr>
-        <tr>
-            <td colspan="3">Фактор A</td>
-            <td colspan="2" class="Q">?</td>
-            <td colspan="2" class="power_of_freedom">?</td>
-            <td colspan="2" class="S">?</td>
-        </tr>
-        <tr>
-            <td colspan="3">Фактор B</td>
-            <td colspan="2" class="Q">?</td>
-            <td colspan="2" class="power_of_freedom">?</td>
-            <td colspan="2" class="S">?</td>
-        </tr>
-        <tr>
-            <td colspan="3">Одночасна дія факторів A і B</td>
-            <td colspan="2" class="Q">?</td>
-            <td colspan="2" class="power_of_freedom">?</td>
-            <td colspan="2" class="S">?</td>
-        </tr>
-        <tr>
-            <td colspan="3">Дія випадкової компоненти ε<sub>ijk</sub></td>
-            <td colspan="2" class="Q">?</td>
-            <td colspan="2" class="power_of_freedom">?</td>
-            <td colspan="2" class="S">?</td>
-        </tr>
-        <tr>
-            <td colspan="3">Загальне відхилення</td>
-            <td colspan="2" class="Q">?</td>
-            <td colspan="2" class="power_of_freedom">?</td>
-            <td colspan="2" class="S">?</td>
-        </tr>
-        <tr>
-            <td colspan="9"><button id="calculate">Calculate</button></td>
-        </tr>
-    </table>
-
+    <script src="js/F_crit.js"></script>
     <script src="js/build_table.js"></script>
     <script src="js/default.js"></script>
     <script src="js/calculate.js"></script>

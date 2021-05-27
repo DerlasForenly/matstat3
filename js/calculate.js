@@ -1,8 +1,17 @@
 calculate.onclick = () => {
+    function reshape(arr, cols) {
+        let newArr = []
+        while(arr.length) newArr.push(arr.splice(0,cols))
+        return newArr
+    }
+
+    let size_A = parseInt(document.getElementById('size_A').value)
+    let size_B = parseInt(document.getElementById('size_B').value)
+
     let factors = []
-    for (let i = 0; i < parseInt(document.getElementById('size_B').value); i++) {
+    for (let i = 0; i < size_B; i++) {
         factors.push([])
-        for (let j = 0; j < parseInt(document.getElementById('size_A').value); j++)
+        for (let j = 0; j < size_A; j++)
             factors[i].push(document.getElementById(`A${j + 1}B${i + 1}`).value.split('; '))
     }
 
@@ -21,32 +30,33 @@ calculate.onclick = () => {
     let Q = document.getElementsByClassName('Q')
     let S = document.getElementsByClassName('S')
 
-    block_means[0].textContent = calculate_mean(factors[0][0])
-    block_means[1].textContent = calculate_mean(factors[0][1])
-    block_means[2].textContent = calculate_mean(factors[0][2])
-    block_means[3].textContent = calculate_mean(factors[1][0])
-    block_means[4].textContent = calculate_mean(factors[1][1])
-    block_means[5].textContent = calculate_mean(factors[1][2])
-    block_means = from_1d_to_2d(to_normal_mass(block_means), factors[0].length)
+    //block_means = from_1d_to_2d(to_normal_mass(block_means), size_A)
+    console.log(block_means)
+    let ij = 0
+    for (let i = 0; i < factors.length; i++)
+        for (let j = 0; j < factors[i].length; j++) {
+            console.log(ij)
+            block_means[ij].textContent = calculate_mean(factors[i][j])
+            ij++
+        }
+           
 
-    col_means[0].textContent = calculate_mean(factors[0][0].concat(factors[1][0]))
-    col_means[1].textContent = calculate_mean(factors[0][1].concat(factors[1][1]))
-    col_means[2].textContent = calculate_mean(factors[0][2].concat(factors[1][2]))
 
-    row_means[0].textContent = calculate_mean(
-        factors[0][0].concat(
-            factors[0][1].concat(
-                factors[0][2]
-                )
-            )
-        )
-    row_means[1].textContent = calculate_mean(
-        factors[1][0].concat(
-            factors[1][1].concat(
-                factors[1][2]
-                )
-            )
-        )
+    for (let i = 0; i < factors[0].length; i++) {
+        let arr = []
+        for (let j = 0; j < factors.length; j++) {
+            arr = arr.concat(factors[j][i])
+        }
+        col_means[i].textContent = calculate_mean(arr)
+    }
+
+    for (let i = 0; i < factors.length; i++) {
+        let arr = []
+        for (let j = 0; j < factors[i].length; j++) {
+            arr = arr.concat(factors[i][j])
+        }
+        row_means[i].textContent = calculate_mean(arr)
+    }
     
     general_mean.textContent = calculate_mean(general_factor)
 
@@ -66,25 +76,28 @@ calculate.onclick = () => {
     Q2 *= factors[0][0].length * factors[0].length
     Q[1].textContent = Q2.toFixed(3)
 
+    ij = 0
     let Q3 = 0
     for (let i = 0; i < factors.length; i++) {
         for (let j = 0; j < factors[i].length; j++) {
             Q3 += (
-                parseFloat(block_means[i][j].textContent) -
+                parseFloat(block_means[ij].textContent) -
                 parseFloat(col_means[j].textContent) -
                 parseFloat(row_means[i].textContent) + 
                 parseFloat(general_mean.textContent)
             ) ** 2
+            ij++
         }
     }
     Q3 *= factors[0][0].length
     Q[2].textContent = Q3.toFixed(3)
 
+    ij = 0
     let Q4 = 0
     for (let j = 0; j < factors.length; j++)
-        for (let k = 0; k < factors[j].length; k++)
+        for (let k = 0; k < factors[j].length; k++, ij++)
             for (let i = 0; i < factors[j][k].length; i++)
-                Q4 += (factors[j][k][i] - parseFloat(block_means[j][k].textContent)) ** 2
+                Q4 += (factors[j][k][i] - parseFloat(block_means[ij].textContent)) ** 2
     Q[3].textContent = Q4.toFixed(3)
 
     let Q5 = 0
@@ -109,6 +122,54 @@ calculate.onclick = () => {
     S[4].textContent = (
         parseFloat(Q[4].textContent) / parseFloat(powers_of_freedom[4].textContent)
     ).toFixed(3)
+
+    deleteChilds(document.getElementById('Fs'))
+
+    let F_n = [0, 0, 0]
+    let F_cr = [0, 0, 0]
+
+    F_n[0] = (parseFloat(S[0].textContent) / parseFloat(S[3].textContent)).toFixed(5)
+    let label = document.createElement('label')
+    label.innerHTML = `F<sub>A</sub><sup>*</sup>=${F_n[0]}`
+    document.getElementById('Fs').appendChild(label)
+
+    F_n[1] = (parseFloat(S[1].textContent) / parseFloat(S[3].textContent)).toFixed(5)
+    label = document.createElement('label')
+    label.innerHTML = `F<sub>B</sub><sup>*</sup>=${F_n[1]}`
+    document.getElementById('Fs').appendChild(label)
+
+    F_n[2] = (parseFloat(S[2].textContent) / parseFloat(S[3].textContent)).toFixed(5)
+    label = document.createElement('label')
+    label.innerHTML = `F<sub>AB</sub><sup>*</sup>=${F_n[2]}`
+    document.getElementById('Fs').appendChild(label)
+
+    F_cr[0] = Fcr(0.05, parseFloat(powers_of_freedom[0].textContent) - 1, parseFloat(powers_of_freedom[3].textContent) - 1)
+    label = document.createElement('label')
+    label.innerHTML = `F<sub>crA</sub><sup>*</sup>=${F_cr[0]}`
+    document.getElementById('Fs').appendChild(label)
+
+    F_cr[1] = Fcr(0.05, parseFloat(powers_of_freedom[1].textContent) - 1, parseFloat(powers_of_freedom[3].textContent) - 1)
+    label = document.createElement('label')
+    label.innerHTML = `F<sub>crB</sub><sup>*</sup>=${F_cr[1]}`
+    document.getElementById('Fs').appendChild(label)
+
+    F_cr[2] = Fcr(0.05, parseFloat(powers_of_freedom[2].textContent) - 1, parseFloat(powers_of_freedom[3].textContent) - 1)
+    label = document.createElement('label')
+    label.innerHTML = `F<sub>crAB</sub><sup>*</sup>=${F_cr[2]}`
+    document.getElementById('Fs').appendChild(label)
+
+    label = document.createElement('label')
+    label.innerHTML = `F<sub>testA</sub><sup>*</sup>=${!(F_n[0] > F_cr[0])}`
+    document.getElementById('Fs').appendChild(label)
+
+    label = document.createElement('label')
+    label.innerHTML = `F<sub>testB</sub><sup>*</sup>=${!(F_n[1] > F_cr[1])}`
+    document.getElementById('Fs').appendChild(label)
+
+    label = document.createElement('label')
+    label.innerHTML = `F<sub>testAB</sub><sup>*</sup>=${!(F_n[2] > F_cr[2])}`
+    document.getElementById('Fs').appendChild(label)
+
 }
 
 function calculate_mean(sample) {
@@ -131,5 +192,12 @@ function from_1d_to_2d(arr, chunk) {
 function to_normal_mass(arr) {
     let res_arr = []
     for (let i = 0; i < arr.length; i++) res_arr.push(arr[i])
+    //console.log(res_arr)
     return res_arr
+}
+
+function concat_v2(arr) {
+    let res = []
+    for (let i = 0; i < arr.length; i++) res.concat(arr[i])
+    return res
 }
